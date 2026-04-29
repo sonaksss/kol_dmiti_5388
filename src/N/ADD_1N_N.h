@@ -1,5 +1,5 @@
-#ifndef _NUMBN_H_
-#define _NUMBN_H_
+#ifndef _ADD_1N_N_H_
+#define _ADD_1N_N_H_
 
 #include "numbN.h"
 
