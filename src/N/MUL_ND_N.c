@@ -1,0 +1,59 @@
+#include <stdlib.h>
+#include "MUL_ND_N.h"
+
+/*
+  Автор: Ефанов Денис
+  Группа: 5388
+*/
+
+/*
+  Умножение натурального числа на цифру.
+  A[0] - младшая цифра (a_0), A[n-1] - старшая (a_{n-1}).
+
+  Параметры:
+    1) NUMBN a - натуральное число-множитель
+    2) int d   - цифра-множитель (0..9)
+
+  Функция возвращает NUMBN - результат умножения, либо пустой NUMBN при ошибке
+*/
+NUMBN mulNdN(NUMBN a, int d) {
+    NUMBN result;
+    result.n = 0;
+    result.A = NULL;
+
+    if (d < 0 || d > 9) {
+        printf("\nОшибка: %d не является цифрой (допустимо 0..9)\n", d);
+        return result;
+    }
+
+    if (!a.A) {
+        printf("\nОшибка: число не существует!\n");
+        return result;
+    }
+
+    /* Случай умножения на 0: результат — ноль */
+    if (d == 0) {
+        result.n = 1;
+        result.A = (int*)calloc(1, sizeof(int));
+        result.A[0] = 0;
+        return result;
+    }
+
+    result.n = a.n + 1;
+    result.A = (int*)calloc(result.n, sizeof(int));
+
+    int carry = 0;
+    for (int i = 0; i < a.n; i++) {
+        int product = a.A[i] * d + carry;
+        result.A[i] = product % 10;
+        carry = product / 10;
+    }
+    result.A[a.n] = carry;
+
+    /* Убираем ведущие нули, оставляя минимум одну цифру */
+    while (result.n > 1 && result.A[result.n - 1] == 0) {
+        result.n--;
+    }
+
+    return result;
+}
