@@ -4,7 +4,7 @@
 #include "numbN.h"
 
 /*
-  mulNk – умножение натурального числа на 10^k
+  MUL_Nk_N – умножение натурального числа на 10^k
  
   Умножает длинное натуральное число на 10 в степени k.
   Цифры хранятся от старшего разряда к младшему (big-endian).
@@ -19,6 +19,6 @@
   Группа: 5388
 */
 
-NUMBN MUL_NK_N(const NUMBN* num, int k);
+NUMBN MUL_Nk_N(const NUMBN* num, int k);
 
 #endif
