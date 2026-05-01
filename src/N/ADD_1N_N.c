@@ -1,6 +1,6 @@
 #include <stdlib.h>
+#include <string.h>
 #include "ADD_1N_N.h"
-#include "numbN.h"
 
 /*
   Автор: Нигай Борис
@@ -28,18 +28,35 @@
 */
 
 NUMBN ADD_1N_N(NUMBN num) {
-    int carry = 1;
+    if (num.A == NULL) {
+        return num;
+    }
 
-    for (int i = 0; i < num.n && carry != 0; i++) {
-        int sum = num.A[i] + carry;
-        num.A[i] = sum % 10;
+    NUMBN result;
+    result.n = num.n;
+    result.A = (int*)malloc(result.n * sizeof(int));
+    if (result.A == NULL) {
+        return num;
+    }
+    memcpy(result.A, num.A, result.n * sizeof(int));
+
+    int carry = 1;
+    for (int i = 0; i < result.n && carry != 0; i++) {
+        int sum = result.A[i] + carry;
+        result.A[i] = sum % 10;
         carry = sum / 10;
     }
 
     if (carry) {
-        num.n += 1;
-        num.A = (int*)realloc(num.A, num.n * sizeof(int));
-        num.A[num.n - 1] = carry;
+        int* tmp = (int*)realloc(result.A, (result.n + 1) * sizeof(int));
+        if (tmp == NULL) {
+            free(result.A);
+            return num;
+        }
+        result.A = tmp;
+        result.A[result.n] = carry;
+        result.n += 1;
     }
-    return num;
+
+    return result;
 }
