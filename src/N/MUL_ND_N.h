@@ -12,6 +12,6 @@
 
   Функция возвращает результат умножения - NUMBN
 */
-NUMBN mulNdN(NUMBN a, int d);
+NUMBN MUL_ND_N(NUMBN a, int d);
 
 #endif

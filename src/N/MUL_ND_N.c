@@ -16,7 +16,7 @@
 
   Функция возвращает NUMBN - результат умножения, либо пустой NUMBN при ошибке
 */
-NUMBN mulNdN(NUMBN a, int d) {
+NUMBN MUL_ND_N(NUMBN a, int d) {
     NUMBN result;
     result.n = 0;
     result.A = NULL;
