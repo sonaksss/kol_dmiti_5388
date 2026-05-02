@@ -1,38 +1,27 @@
+/*
+  Автор: Семенов Максим
+  Группа: 5388
+*/
+
 #include "MUL_Nk_N.h"
 #include <stdlib.h>
 
-/*
-    MUL_NK_N – умножение натурального числа на 10^k
-    
-    Умножает длинное натуральное число на 10 в степени k.
-    Цифры хранятся от старшего разряда к младшему (big-endian).
-    
-    Параметры:
-        1) const NUMBN* num – исходное натуральное число
-        2) int k – натуральное или 0
-    
-    Возвращает: NUMBN – результат умножения (num * 10^k)
-    
-    Автор: Семенов Максим
-    Группа: 5388
-*/
-
-
-NUMBN MUL_Nk_N(const NUMBN* num, int k){
+NUMBN MUL_Nk_N(const NUMBN* num, int k) {
     NUMBN result;
     result.n = num->n + k;
     result.A = (int*)malloc(result.n * sizeof(int));
-    if(result.A == NULL){
+    if (result.A == NULL) {
         result.n = 0;
         return result;
     }
-    for(int i=0; i<result.n; i++){
-        if(i < num->n){
-            result.A[i] = num->A[i];
-        }
-        else{
-            result.A[i] = 0;
-        }
+
+    for (int i = 0; i < k; i++) {
+        result.A[i] = 0;
     }
+
+    for (int i = 0; i < num->n; i++) {
+        result.A[i + k] = num->A[i];
+    }
+
     return result;
 }
