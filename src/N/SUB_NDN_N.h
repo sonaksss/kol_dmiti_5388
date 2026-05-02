@@ -1,5 +1,5 @@
-#ifndef _SUB_ND_N_H_
-#define _SUB_ND_N_H_
+#ifndef _SUB_NDN_N_H_
+#define _SUB_NDN_N_H_
 
 #include "numbN.h"
 
@@ -18,6 +18,6 @@
   Возвращает NUMBN* — результат a - b*d.
   В случае ошибки возвращает NULL.
 */
-NUMBN* SUB_ND_N(NUMBN* a, NUMBN* b, int d);
+NUMBN* SUB_NDN_N(NUMBN* a, NUMBN* b, int d);
 
 #endif

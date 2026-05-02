@@ -1,4 +1,4 @@
-#include "SUB_ND_N.h"
+#include "SUB_NDN_N.h"
 #include "COM_NN_D.h"
 #include "MUL_ND_N.h"
 #include "SUB_NN_N.h"
@@ -7,8 +7,6 @@
 /*
   Автор: Ефанов Денис
   Группа: 5388
-
-  SUB_ND_N
 
   Вычитание из натурального другого натурального, умноженного на цифру,
   для случая с неотрицательным результатом: result = a - b * d.
@@ -24,7 +22,7 @@
   Возвращает NUMBN* — результат a - b*d.
   В случае ошибки возвращает NULL.
 */
-NUMBN* SUB_ND_N(NUMBN* a, NUMBN* b, int d) {
+NUMBN* SUB_NDN_N(NUMBN* a, NUMBN* b, int d) {
     if (a == NULL || a->A == NULL) return NULL;
     if (b == NULL || b->A == NULL) return NULL;
     if (d < 0 || d > 9)           return NULL;
