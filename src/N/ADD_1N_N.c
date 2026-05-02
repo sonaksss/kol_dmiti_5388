@@ -25,23 +25,41 @@
     2) carry - начальный перенос(прибавляемая единица)
 
   Возвращает NUMBN - новое натуральное число, равное num + 1
+
+  ОШИБКА ВЫДЕЛЕНИЯ ПАМЯТИ:
+  если result.n = -1 и result.A = NULL.
+
+  Вызывающий код обязан проверить результат:
+  if (result.n < 0 || result.A == NULL) {
+    // ошибка выделения памяти
+    }
 */
 
+static NUMBN makeError() {
+    NUMBN err;
+    err.n = -1;
+    err.A = NULL;
+    return err;
+}
+
 NUMBN ADD_1N_N(NUMBN num) {
-    if (num.A == NULL) {
-        return num;
+
+    if (num.A == NULL || num.n <= 0) {
+        return makeError();
     }
 
     NUMBN result;
     result.n = num.n;
+
     result.A = (int*)malloc(result.n * sizeof(int));
     if (result.A == NULL) {
-        return num;
+        return makeError();
     }
+
     memcpy(result.A, num.A, result.n * sizeof(int));
 
     int carry = 1;
-    for (int i = 0; i < result.n && carry != 0; i++) {
+    for (int i = 0; i < result.n && carry; i++) {
         int sum = result.A[i] + carry;
         result.A[i] = sum % 10;
         carry = sum / 10;
@@ -51,11 +69,12 @@ NUMBN ADD_1N_N(NUMBN num) {
         int* tmp = (int*)realloc(result.A, (result.n + 1) * sizeof(int));
         if (tmp == NULL) {
             free(result.A);
-            return num;
+            return makeError();
         }
+
         result.A = tmp;
         result.A[result.n] = carry;
-        result.n += 1;
+        result.n++;
     }
 
     return result;
