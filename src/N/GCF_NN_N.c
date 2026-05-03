@@ -14,9 +14,9 @@
 Принимает 2 натуральных числа
 Вычисляет НОД и возвращет натуральное число
 */
-NUMBN* GCF_NN_N(NUMBN* a, NUMBN* b){
-    NUMBN* temp_a = a;
-    NUMBN* temp_b = b;
+NUMBN GCF_NN_N(NUMBN a, NUMBN b){
+    NUMBN temp_a = a;
+    NUMBN temp_b = b;
 
     while (NZER_N_B(temp_a) && NZER_N_B(temp_b)) {
         if (COM_NN_D(temp_a, temp_b) == 2) {

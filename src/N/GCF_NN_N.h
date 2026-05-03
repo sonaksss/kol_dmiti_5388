@@ -14,6 +14,6 @@
 Принимает 2 натуральных числа
 Вычисляет НОД и возвращет натуральное число
 */
-NUMBN* GCF_NN_N(NUMBN* a, NUMBN* b);
+NUMBN GCF_NN_N(NUMBN a, NUMBN b);
 
 #endif

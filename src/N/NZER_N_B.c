@@ -12,6 +12,6 @@
 Возвращает true если не равно нулю, иначе false
 
 */
-bool NZER_N_B(NUMBN* a){
-    return (a->A[0] != 0);
+bool NZER_N_B(NUMBN num) {
+    return !(num.n == 1 && num.A[0] == 0);
 }

@@ -16,6 +16,6 @@
 Возвращает true если не равно нулю, иначе false
 
 */
-bool NZER_N_B(NUMBN* a);
+bool NZER_N_B(NUMBN a);
 
 #endif
