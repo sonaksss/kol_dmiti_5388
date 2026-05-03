@@ -13,5 +13,8 @@
 
 */
 bool NZER_N_B(NUMBN num) {
+    if (num.A == NULL || num.n == 0) {
+        return false;
+    }
     return !(num.n == 1 && num.A[0] == 0);
 }
