@@ -8,6 +8,8 @@
   Автор: Ефанов Денис
   Группа: 5388
 
+  SUB_NDN_N
+
   Вычитание из натурального другого натурального, умноженного на цифру,
   для случая с неотрицательным результатом: result = a - b * d.
 
@@ -38,21 +40,21 @@ NUMBN* SUB_NDN_N(NUMBN* a, NUMBN* b, int d) {
         return result;
     }
 
-    /* вычислить b * d */
-    NUMBN* tmp = MUL_ND_N(b, d);
-    if (tmp == NULL) return NULL;
+    /* Вычислить b * d через обновлённый MUL_ND_N, возвращающий указатель */
+    NUMBN* bd = MUL_ND_N(b, d);
+    if (bd == NULL) return NULL;
 
-    /* убедиться, что a >= b*d, иначе нарушено предусловие */
-    if (COM_NN_D(a, tmp) == 1) {
-        free(tmp->A);
-        free(tmp);
+    /* Убедиться, что a >= b*d, иначе нарушено предусловие */
+    if (COM_NN_D(a, bd) == 1) {
+        free(bd->A);
+        free(bd);
         return NULL;
     }
 
-    /* вычислить a - b*d */
-    NUMBN* result = SUB_NN_N(a, tmp);
-    free(tmp->A);
-    free(tmp);
+    /* Вычислить a - b*d */
+    NUMBN* result = SUB_NN_N(a, bd);
+    free(bd->A);
+    free(bd);
 
     return result;
 }
