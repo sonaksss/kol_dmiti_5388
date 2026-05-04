@@ -12,9 +12,9 @@
 Возвращает true если не равно нулю, иначе false
 
 */
-bool NZER_N_B(NUMBN num) {
-    if (num.A == NULL || num.n == 0) {
+bool NZER_N_B(NUMBN* num) {
+    if (num->A == NULL || num->n == 0) {
         return false;
     }
-    return !(num.n == 1 && num.A[0] == 0);
+    return !(num->n == 1 && num->A[0] == 0);
 }
