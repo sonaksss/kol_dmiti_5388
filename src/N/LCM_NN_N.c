@@ -20,52 +20,47 @@
     - MUL_NN_N (N-8)  - умножение натуральных чисел
 
   Параметры:
-    1) NUMBN a - первое натуральное число
-    2) NUMBN b - второе натуральное число
+    1) NUMBN* a - указатель на первое натуральное число
+    2) NUMBN* b - указатель на второе натуральное число
 
-  Возвращает NUMBN - НОК(a, b).
+  Возвращает NUMBN* - указатель на НОК(a, b).
 
-  ОШИБКА: если a.A == NULL или b.A == NULL,
-  возвращается структура { n = -1, A = NULL }.
+  ОШИБКА: возвращает NULL при невалидных входных данных,
+  сбое зависимых модулей или сбое выделения памяти.
   Вызывающий код ОБЯЗАН проверить результат:
-    if (result.n < 0 || result.A == NULL) { // ошибка }
+    if (result == NULL) { // ошибка }
+  Вызывающий код ОБЯЗАН освободить память после использования:
+    free(result->A);
+    free(result);
 */
 
-/* 
-  Заглушки: N-13, N-11, N-8
-NUMBN GCF_NN_N(NUMBN a, NUMBN b) { return a; }
-NUMBN DIV_NN_N(NUMBN a, NUMBN b) { return a; }
-NUMBN MUL_NN_N(NUMBN a, NUMBN b) { return a; }
+/*
+  Заглушки - удалить после интеграции с реальными модулями
+NUMBN* GCF_NN_N(NUMBN* a, NUMBN* b) { return a; }
+NUMBN* DIV_NN_N(NUMBN* a, NUMBN* b) { return a; }
+NUMBN* MUL_NN_N(NUMBN* a, NUMBN* b) { return a; }
 */
 
-static NUMBN makeError() {
-    NUMBN err;
-    err.n = -1;
-    err.A = NULL;
-    return err;
-}
-
-NUMBN LCM_NN_N(NUMBN a, NUMBN b) {
-    if (a.A == NULL || b.A == NULL) {
-        return makeError();
+NUMBN* LCM_NN_N(NUMBN* a, NUMBN* b) {
+    if (a == NULL || b == NULL || a->A == NULL || b->A == NULL) {
+        return NULL;
     }
 
-    NUMBN gcd = GCF_NN_N(a, b);
-    if (gcd.A == NULL) {
-        return makeError();
+    NUMBN* gcd = GCF_NN_N(a, b);
+    if (gcd == NULL) {
+        return NULL;
     }
 
-    NUMBN a_div = DIV_NN_N(a, gcd);
-    free(gcd.A);
-    if (a_div.A == NULL) {
-        return makeError();
+    NUMBN* a_div = DIV_NN_N(a, gcd);
+    free(gcd->A);
+    free(gcd);
+    if (a_div == NULL) {
+        return NULL;
     }
 
-    NUMBN result = MUL_NN_N(a_div, b);
-    free(a_div.A);
-    if (result.A == NULL) {
-        return makeError();
-    }
+    NUMBN* result = MUL_NN_N(a_div, b);
+    free(a_div->A);
+    free(a_div);
 
     return result;
 }

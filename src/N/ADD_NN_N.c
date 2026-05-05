@@ -12,67 +12,64 @@
   Сложение двух натуральных чисел.
 
   Числа хранятся в массивах A[]:
-    A[0] - младший разряд, A[n-1] - старший.
+    A[0] - младший разряд, A[n-1] — старший.
 
   Алгоритм - поразрядное сложение с переносом:
     1) идём по разрядам от младшего к старшему
     2) складываем цифры обоих чисел и перенос из предыдущего разряда
     3) если после старшего разряда остался перенос - добавляем новый разряд
 
-  Зависит от:
-    COM_NN_D (N-1) - не используется напрямую в алгоритме сложения,
-    но должна быть доступна как часть модуля N.
-
   Параметры:
-    1) NUMBN a - первое натуральное число
-    2) NUMBN b - второе натуральное число
+    1) NUMBN* a - указатель на первое натуральное число
+    2) NUMBN* b - указатель на второе натуральное число
 
-  Возвращает NUMBN - сумму a + b.
+  Возвращает NUMBN* - указатель на сумму a + b.
 
-  ОШИБКА: если a.A == NULL или b.A == NULL, или сбой выделения памяти,
-  возвращается структура { n = -1, A = NULL }.
+  ОШИБКА: возвращает NULL при невалидных входных данных
+  или сбое выделения памяти.
   Вызывающий код ОБЯЗАН проверить результат:
-    if (result.n < 0 || result.A == NULL) { // ошибка }
+    if (result == NULL) { // ошибка }
+  Вызывающий код ОБЯЗАН освободить память после использования:
+    free(result->A);
+    free(result);
 */
 
 /* Заглушка: N-1
-int COM_NN_D(NUMBN a, NUMBN b) { return 0; }
+int COM_NN_D(NUMBN* a, NUMBN* b) { return 0; }
 */
 
-static NUMBN makeError() {
-    NUMBN err;
-    err.n = -1;
-    err.A = NULL;
-    return err;
-}
-
-NUMBN ADD_NN_N(NUMBN a, NUMBN b) {
-    if (a.A == NULL || b.A == NULL) {
-        return makeError();
+NUMBN* ADD_NN_N(NUMBN* a, NUMBN* b) {
+    if (a == NULL || b == NULL || a->A == NULL || b->A == NULL) {
+        return NULL;
     }
 
-    int maxLen = (a.n > b.n) ? a.n : b.n;
+    int maxLen = (a->n > b->n) ? a->n : b->n;
 
-    NUMBN result;
-    result.n = maxLen + 1;
-    result.A = (int*)malloc(result.n * sizeof(int));
-    if (result.A == NULL) {
-        return makeError();
+    NUMBN* result = (NUMBN*)malloc(sizeof(NUMBN));
+    if (result == NULL) {
+        return NULL;
+    }
+
+    result->n = maxLen + 1;
+    result->A = (int*)malloc(result->n * sizeof(int));
+    if (result->A == NULL) {
+        free(result);
+        return NULL;
     }
 
     int carry = 0;
     for (int i = 0; i < maxLen; i++) {
-        int digit_a = (i < a.n) ? a.A[i] : 0;
-        int digit_b = (i < b.n) ? b.A[i] : 0;
+        int digit_a = (i < a->n) ? a->A[i] : 0;
+        int digit_b = (i < b->n) ? b->A[i] : 0;
         int sum = digit_a + digit_b + carry;
-        result.A[i] = sum % 10;
+        result->A[i] = sum % 10;
         carry = sum / 10;
     }
 
-    result.A[maxLen] = carry;
+    result->A[maxLen] = carry;
 
-    if (result.A[result.n - 1] == 0) {
-        result.n--;
+    if (result->A[result->n - 1] == 0) {
+        result->n--;
     }
 
     return result;
