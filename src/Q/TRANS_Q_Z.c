@@ -1,4 +1,3 @@
-// TRANS_Q_Z.c
 #include "TRANS_Q_Z.h"
 #include "numbZ.h"
 #include <stdlib.h>
