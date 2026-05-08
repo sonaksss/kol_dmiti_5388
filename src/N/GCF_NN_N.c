@@ -45,19 +45,39 @@ static void freeNumbn(NUMBN* num) {
 Принимает 2 натуральных числа
 Вычисляет НОД и возвращет натуральное число
 */
-NUMBN* GCF_NN_N(NUMBN* a, NUMBN* b){
+NUMBN* GCF_NN_N(NUMBN* a, NUMBN* b) {
+    if (!a || !b || !a->A || !b->A || a->n <= 0 || b->n <= 0) {
+        return NULL;
+    }
+    
     NUMBN* temp_a = copyNumbn(a);
+    if (!temp_a) return NULL;
+    
     NUMBN* temp_b = copyNumbn(b);
+    if (!temp_b) {
+        freeNumbn(temp_a);
+        return NULL;
+    }
 
     while (NZER_N_B(temp_a) && NZER_N_B(temp_b)) {
         if (COM_NN_D(temp_a, temp_b) == 2) {
-            NUMBN* old = temp_a;
-            temp_a = MOD_NN_N(temp_a, temp_b);
-            freeNumbn(old);
+            NUMBN* new_a = MOD_NN_N(temp_a, temp_b);
+            if (!new_a) {
+                freeNumbn(temp_a);
+                freeNumbn(temp_b);
+                return NULL;
+            }
+            freeNumbn(temp_a);
+            temp_a = new_a;
         } else {
-            NUMBN* old = temp_b;
-            temp_b = MOD_NN_N(temp_b, temp_a);
-            freeNumbn(old);
+            NUMBN* new_b = MOD_NN_N(temp_b, temp_a);
+            if (!new_b) {
+                freeNumbn(temp_a);
+                freeNumbn(temp_b);
+                return NULL;
+            }
+            freeNumbn(temp_b);
+            temp_b = new_b;
         }
     }
 
