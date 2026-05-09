@@ -1,5 +1,4 @@
 #include "SUB_NN_N.h"
-#include "COM_NN_D.h"
 #include <stdlib.h>
 
 /*
@@ -9,32 +8,25 @@
 
 /*
   Примечание по структуре NUMBN:
-    - A[0]   — старшая цифра числа
-    - A[n-1] — младшая цифра числа
+    - A[0]   — младшая цифра числа (единицы)
+    - A[n-1] — старшая цифра числа
     - n      — количество цифр в числе
 */
 
 static NUMBN* allocNatural(int size) {
-    NUMBN* result = (NUMBN*)malloc(sizeof(NUMBN));
-    result->n = size;
-    result->A = (int*)calloc(size, sizeof(int));
-    return result;
+    if (size <= 0) return NULL;
+    NUMBN* r = (NUMBN*)malloc(sizeof(NUMBN));
+    if (r == NULL) return NULL;
+    r->n = size;
+    r->A = (int*)calloc(size, sizeof(int));
+    if (r->A == NULL) { free(r); return NULL; }
+    return r;
 }
 
 static void removeLeadingZeros(NUMBN* num) {
-    int leading = 0;
-    while (leading < num->n - 1 && num->A[leading] == 0) {
-        leading++;
-    }
-    if (leading > 0) {
-        int newN = num->n - leading;
-        int* newA = (int*)malloc(newN * sizeof(int));
-        for (int i = 0; i < newN; i++) {
-            newA[i] = num->A[i + leading];
-        }
-        free(num->A);
-        num->A = newA;
-        num->n = newN;
+    if (num == NULL || num->A == NULL) return;
+    while (num->n > 1 && num->A[num->n - 1] == 0) {
+        num->n--;
     }
 }
 
@@ -42,22 +34,27 @@ static void removeLeadingZeros(NUMBN* num) {
   SUB_NN_N
 
   Вычитание столбиком с заимствованием (borrow) от младшего разряда к старшему.
-  A[0] — старшая цифра, A[n-1] — младшая, поэтому идём с конца массива.
-  Предполагается, что a >= b (проверяется вызывающей стороной через COM_NN_D).
+  A[0] — младшая цифра, A[n-1] — старшая, идём от начала массива.
+  Предполагается, что a >= b.
 
   Параметры:
     1) NUMBN* a - уменьшаемое
     2) NUMBN* b - вычитаемое (b <= a)
 
-  Возвращает указатель на новое NUMBN = a - b
+  Возвращает указатель на новое NUMBN = a - b, или NULL при ошибке
 */
 NUMBN* SUB_NN_N(NUMBN* a, NUMBN* b) {
+    if (a == NULL || b == NULL) return NULL;
+    if (a->n <= 0 || b->n <= 0) return NULL;
+    if (a->A == NULL || b->A == NULL) return NULL;
+
     NUMBN* result = allocNatural(a->n);
+    if (result == NULL) return NULL;
 
     int borrow = 0;
     for (int i = 0; i < a->n; i++) {
-        int aDigit = a->A[a->n - 1 - i];
-        int bDigit = (i < b->n) ? b->A[b->n - 1 - i] : 0;
+        int aDigit = a->A[i];
+        int bDigit = (i < b->n) ? b->A[i] : 0;
         int diff = aDigit - bDigit - borrow;
         if (diff < 0) {
             diff += 10;
@@ -65,7 +62,7 @@ NUMBN* SUB_NN_N(NUMBN* a, NUMBN* b) {
         } else {
             borrow = 0;
         }
-        result->A[result->n - 1 - i] = diff;
+        result->A[i] = diff;
     }
 
     removeLeadingZeros(result);
